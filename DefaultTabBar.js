@@ -1,7 +1,5 @@
 const React = require('react');
 const { ViewPropTypes } = ReactNative = require('react-native');
-const PropTypes = require('prop-types');
-const createReactClass = require('create-react-class');
 const {
   StyleSheet,
   Text,
@@ -10,17 +8,17 @@ const {
 } = ReactNative;
 const Button = require('./Button');
 
-const DefaultTabBar = createReactClass({
+const DefaultTabBar = React.createClass({
   propTypes: {
-    goToPage: PropTypes.func,
-    activeTab: PropTypes.number,
-    tabs: PropTypes.array,
-    backgroundColor: PropTypes.string,
-    activeTextColor: PropTypes.string,
-    inactiveTextColor: PropTypes.string,
+    goToPage: React.PropTypes.func,
+    activeTab: React.PropTypes.number,
+    tabs: React.PropTypes.array,
+    backgroundColor: React.PropTypes.string,
+    activeTextColor: React.PropTypes.string,
+    inactiveTextColor: React.PropTypes.string,
     textStyle: Text.propTypes.style,
     tabStyle: ViewPropTypes.style,
-    renderTab: PropTypes.func,
+    renderTab: React.PropTypes.func,
     underlineStyle: ViewPropTypes.style,
   },
 
@@ -67,9 +65,8 @@ const DefaultTabBar = createReactClass({
       bottom: 0,
     };
 
-    const translateX = this.props.scrollValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0,  containerWidth / numberOfTabs],
+    const left = this.props.scrollValue.interpolate({
+      inputRange: [0, 1, ], outputRange: [0,  containerWidth / numberOfTabs, ],
     });
     return (
       <View style={[styles.tabs, {backgroundColor: this.props.backgroundColor, }, this.props.style, ]}>
@@ -78,17 +75,7 @@ const DefaultTabBar = createReactClass({
           const renderTab = this.props.renderTab || this.renderTab;
           return renderTab(name, page, isTabActive, this.props.goToPage);
         })}
-        <Animated.View
-          style={[
-            tabUnderlineStyle,
-            {
-              transform: [
-                { translateX },
-              ]
-            },
-            this.props.underlineStyle,
-          ]}
-        />
+        <Animated.View style={[tabUnderlineStyle, { left, }, this.props.underlineStyle, ]} />
       </View>
     );
   },

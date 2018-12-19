@@ -1,4 +1,4 @@
-const React = require('react');
+var React = require('react');
 
 class StaticContainer extends React.Component {
 

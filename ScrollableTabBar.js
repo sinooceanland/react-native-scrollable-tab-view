@@ -1,7 +1,5 @@
 const React = require('react');
 const { ViewPropTypes } = ReactNative = require('react-native');
-const PropTypes = require('prop-types');
-const createReactClass = require('create-react-class');
 const {
   View,
   Animated,
@@ -15,22 +13,22 @@ const Button = require('./Button');
 
 const WINDOW_WIDTH = Dimensions.get('window').width;
 
-const ScrollableTabBar = createReactClass({
+const ScrollableTabBar = React.createClass({
   propTypes: {
-    goToPage: PropTypes.func,
-    activeTab: PropTypes.number,
-    tabs: PropTypes.array,
-    backgroundColor: PropTypes.string,
-    activeTextColor: PropTypes.string,
-    inactiveTextColor: PropTypes.string,
-    scrollOffset: PropTypes.number,
+    goToPage: React.PropTypes.func,
+    activeTab: React.PropTypes.number,
+    tabs: React.PropTypes.array,
+    backgroundColor: React.PropTypes.string,
+    activeTextColor: React.PropTypes.string,
+    inactiveTextColor: React.PropTypes.string,
+    scrollOffset: React.PropTypes.number,
     style: ViewPropTypes.style,
     tabStyle: ViewPropTypes.style,
     tabsContainerStyle: ViewPropTypes.style,
     textStyle: Text.propTypes.style,
-    renderTab: PropTypes.func,
+    renderTab: React.PropTypes.func,
     underlineStyle: ViewPropTypes.style,
-    onScroll: PropTypes.func,
+    onScroll:React.PropTypes.func,
   },
 
   getDefaultProps() {
@@ -148,7 +146,7 @@ const ScrollableTabBar = createReactClass({
   measureTab(page, event) {
     const { x, width, height, } = event.nativeEvent.layout;
     this._tabsMeasurements[page] = {left: x, right: x + width, width, height, };
-    this.updateView({value: this.props.scrollValue.__getValue(), });
+    this.updateView({value: this.props.scrollValue._value, });
   },
 
   render() {
@@ -207,12 +205,12 @@ const ScrollableTabBar = createReactClass({
       width = WINDOW_WIDTH;
     }
     this.setState({ _containerWidth: width, });
-    this.updateView({value: this.props.scrollValue.__getValue(), });
+    this.updateView({value: this.props.scrollValue._value, });
   },
 
   onContainerLayout(e) {
     this._containerMeasurements = e.nativeEvent.layout;
-    this.updateView({value: this.props.scrollValue.__getValue(), });
+    this.updateView({value: this.props.scrollValue._value, });
   },
 });
 
