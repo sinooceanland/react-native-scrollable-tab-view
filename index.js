@@ -60,6 +60,7 @@ const ScrollableTabView = React.createClass({
             scrollValue: new Animated.Value(this.props.initialPage),
             containerWidth: Dimensions.get('window').width,
             sceneKeys: this.newSceneKeys({ currentPage: this.props.initialPage, }),
+            lock: false,
         };
     },
 
@@ -76,7 +77,10 @@ const ScrollableTabView = React.createClass({
     goToPage(pageNumber) {
         const offset = pageNumber * this.state.containerWidth;
         if (this.scrollView) {
-            this.scrollView.scrollTo({x: offset, y: 0, animated: !this.props.scrollWithoutAnimation, });
+            // 为了避免安卓下组件更新导致滑动事件丢失
+            setTimeout(() => {
+                this.scrollView.scrollTo({x: offset, y: 0, animated: !this.props.scrollWithoutAnimation, })
+            }, 0)
         }
 
         const currentPage = this.state.currentPage;
@@ -139,8 +143,8 @@ const ScrollableTabView = React.createClass({
                 const offsetX = e.nativeEvent.contentOffset.x;
                 this._updateScrollValue(offsetX / this.state.containerWidth);
             }}
-            onMomentumScrollBegin={this._onMomentumScrollBeginAndEnd}
-            onMomentumScrollEnd={this._onMomentumScrollBeginAndEnd}
+            onMomentumScrollBegin={this._onMomentumScrollBegin}
+            onMomentumScrollEnd={this._onMomentumScrollEnd}
             scrollEventThrottle={16}
             scrollsToTop={false}
             showsHorizontalScrollIndicator={false}
@@ -167,8 +171,13 @@ const ScrollableTabView = React.createClass({
         });
     },
 
-    _onMomentumScrollBeginAndEnd(e) {
+    _onMomentumScrollBegin({nativeEvent}) {
+    },
+
+    _onMomentumScrollEnd(e) {
+
         const offsetX = e.nativeEvent.contentOffset.x;
+        this.contentOffset = e.nativeEvent.contentOffset;
         const page = Math.round(offsetX / this.state.containerWidth);
         if (this.state.currentPage !== page) {
             this._updateSelectedPage(page);
